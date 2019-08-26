@@ -3,6 +3,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
+const port = process.env.PORT || 3000;
+
 function isValid( field, value ){
     switch (value) {
         case undefined:
@@ -192,4 +194,6 @@ app.delete('/users/:id', function(req, res){
     res.json(response);
 });
 
-app.listen(80);
+app.listen(port, () => {
+    console.log(`Listening to requests on port ${ port }`);
+});
