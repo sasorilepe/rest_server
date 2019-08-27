@@ -1,11 +1,13 @@
 /* jshint esversion: 6 */
 
+"use strict";
+
 const express = require('express');
 const bodyParser = require('body-parser');
 
 const port = process.env.PORT || 3000;
 
-function isValid( field, value ){
+function isValid( field, value, response ){
     switch (value) {
         case undefined:
             response.errors.push({
@@ -33,7 +35,7 @@ function isValid( field, value ){
     return false;
 }
 
-function isValidAge( age ){
+function isValidAge( age, response ){
     if ( age === undefined ){
         response.errors.push({
             field: 'age',
@@ -53,25 +55,19 @@ function isValidAge( age ){
     return false;
 }
 
-function validateAll( req ){
+function validateAll( req, response ){
     const { firstName, lastName, age } = req.body;
     let check = true;
-    if( !isValid('firstName', firstName) ){
+    if( !isValid('firstName', firstName, response) ){
         check = false;
     }
-    if( !isValid('lastName', lastName) ){
+    if( !isValid('lastName', lastName, response) ){
         check = false;
     }
-    if( !isValidAge(age) ){
+    if( !isValidAge(age, response) ){
         check = false;
     }
     return check;
-}
-
-function clearResponse(){
-    response = {
-        ok: false
-    };
 }
 
 const app = express();
@@ -91,27 +87,21 @@ let data = new Set([{
     age: 21
 }]);
 
-let response = {
-    ok: false
-};
-
 app.get('/users', function(req, res){
 
-    clearResponse();
-
-    if(data.size > 0){
-        response.ok = true;
-        response.results = [...data];
-        res.status(200);
-    } else{
-        res.status(204);
-    }
+    let response = {
+        ok: true,
+        results: [...data]
+    };
+    res.status(200);
     res.json(response);
 });
 
 app.get('/users/:id', function(req, res){
     
-    clearResponse();
+    let response = {
+        ok: false
+    };
 
     for(const user of data){
         if( user.id == req.params.id ){
@@ -120,20 +110,18 @@ app.get('/users/:id', function(req, res){
             break;
         }
     }
-    if(response.ok){
-        res.status(200);
-    } else{
-        res.status(204);
-    }
+    res.status(200);
     res.json(response);
 });
 
 app.post('/users', function(req, res){
 
-    clearResponse();
+    let response = {
+        ok: false
+    };
     response.errors = [];
 
-    if(validateAll(req)){
+    if(validateAll(req, response)){
 
         response.ok = true;
         response.result = req.body;
@@ -151,14 +139,16 @@ app.post('/users', function(req, res){
 
 app.put('/users/:id', function(req, res){
 
-    clearResponse();
+    let response = {
+        ok: false
+    };
     response.errors = [];
 
     for(let user of data){
 
         if( user.id == req.params.id ){
             
-            if(validateAll(req)){ 
+            if(validateAll(req, response)){ 
 
                 delete response.errors;
                 response.ok = true;
@@ -179,7 +169,9 @@ app.put('/users/:id', function(req, res){
 
 app.delete('/users/:id', function(req, res){
 
-    clearResponse();
+    let response = {
+        ok: false
+    };
 
     for(let user of data){
 
