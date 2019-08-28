@@ -42,12 +42,13 @@ const updateOneById = (id, userData) => {
 
 const deleteOneById = id => {
   for (const index in users) {
-    if (users[index].id == id) {
+    const user = users[index];
+    if (user.id == id) {
       users.splice(index, 1);
-      return true;
+      return user;
     }
   }
-  return false;
+  return null;
 };
 
 module.exports = {

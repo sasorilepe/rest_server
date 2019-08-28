@@ -44,10 +44,11 @@ function getErrors(fields = []) {
 }
 
 function validateUser(req, res, next) {
+  const { firstName, lastName, age } = req.body;
   const fields = [
-    { field: "firstName", value: req.body.firstName },
-    { field: "lastName", value: req.body.lastName },
-    { field: "age", value: req.body.age }
+    { field: "firstName", value: firstName },
+    { field: "lastName", value: lastName },
+    { field: "age", value: age }
   ];
 
   const errors = getErrors(fields).filter(error => error != null);
@@ -62,6 +63,17 @@ function validateUser(req, res, next) {
   next();
 }
 
+function responseWhenUserIsNull(user, res, callback) {
+  if (!user) {
+    return res.status(404).json({
+      ok: false,
+      error: "User not found"
+    });
+  }
+  callback();
+}
+
 module.exports = {
-  validateUser
+  validateUser,
+  responseWhenUserIsNull
 };

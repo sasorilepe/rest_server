@@ -1,16 +1,10 @@
 const { Router } = require("express");
-const {
-  getAll,
-  getOne,
-  createOne,
-  updateOne,
-  deleteOne
-} = require("../../controllers/UserController");
-const { validateUser } = require("../../middlewares/UserMiddleware");
+const userController = require("../../controllers/UserController");
+const { validateUser, responseWhenUserIsNull } = require("../../middlewares/UserMiddleware");
 const userRouter = Router();
 
 userRouter.get("/", (_req, res) => {
-  const userList = getAll();
+  const userList = userController.getAll();
   const response = {
     ok: true,
     results: userList
@@ -19,16 +13,18 @@ userRouter.get("/", (_req, res) => {
 });
 
 userRouter.get("/:id", (req, res) => {
-  const user = getOne(req);
-  const response = {
-    ok: true,
-    result: user
-  };
-  res.status(200).json(response);
+  const user = userController.getOne(req);
+  responseWhenUserIsNull(user, res, () => {
+    const response = {
+      ok: true,
+      result: user
+    };
+    res.status(200).json(response);
+  });
 });
 
 userRouter.post("/", validateUser, (req, res) => {
-  const user = createOne(req);
+  const user = userController.createOne(req);
   const response = {
     ok: true,
     result: user
@@ -37,18 +33,22 @@ userRouter.post("/", validateUser, (req, res) => {
 });
 
 userRouter.put("/:id", validateUser, (req, res) => {
-  const user = updateOne(req);
-  const response = {
-    ok: true,
-    result: user
-  };
-  res.status(200).json(response);
+  const user = userController.updateOne(req);
+  responseWhenUserIsNull(user, res, () => {
+    const response = {
+      ok: true,
+      result: user
+    };
+    res.status(200).json(response);
+  });
 });
 
 userRouter.delete("/:id", (req, res) => {
   const response = {};
-  deleteOne(req);
-  res.status(204).json(response);
+  const user = userController.deleteOne(req);
+  responseWhenUserIsNull(user, res, () => {
+    res.status(204).json(response);
+  });
 });
 
 module.exports = userRouter;

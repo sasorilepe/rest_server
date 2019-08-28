@@ -27,8 +27,8 @@ const updateOne = req => {
 
 const deleteOne = req => {
   const { id } = req.params;
-  const wasDeleted = userService.deleteOneById(id);
-  return wasDeleted;
+  const user = userService.deleteOneById(id);
+  return user;
 };
 
 module.exports = {
