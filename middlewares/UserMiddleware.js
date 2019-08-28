@@ -1,5 +1,3 @@
-/* jshint esversion: 6 */
-
 function getErrors(fields = []) {
   return fields.map(item => {
     const { field, value } = item;
@@ -11,7 +9,8 @@ function getErrors(fields = []) {
           message: "It is mandatory"
         };
       } else {
-        if (isNaN(value) || value < 0) {
+        const age = Number(value);
+        if (isNaN(age) || age < 0) {
           return {
             field,
             message: "Must be a positive number or zero"
@@ -44,16 +43,25 @@ function getErrors(fields = []) {
   });
 }
 
-function validateAll(req) {
+function validateUser(req, res, next) {
   const fields = [
     { field: "firstName", value: req.body.firstName },
     { field: "lastName", value: req.body.lastName },
     { field: "age", value: req.body.age }
   ];
 
-  return getErrors(fields).filter(error => error != null);
+  const errors = getErrors(fields).filter(error => error != null);
+
+  if (errors.length) {
+    return res.status(400).json({
+      ok: false,
+      errors
+    });
+  }
+
+  next();
 }
 
 module.exports = {
-  validateAll
+  validateUser
 };

@@ -20,7 +20,7 @@ Request:
 
 ```
 HTTP 1.1
-GET /users/
+GET /v1/users/
 ```
 
 Response:
@@ -51,7 +51,7 @@ Request:
 
 ```
 HTTP 1.1
-GET /users/1
+GET /v1/users/1
 ```
 
 Response:
@@ -113,7 +113,7 @@ Invalid Request:
 
 ```
 HTTP 1.1
-POST /users/
+POST /v1/users/
 
 {
   age: -1,
@@ -148,7 +148,7 @@ Request:
 
 ```
 HTTP 1.1
-PUT /users/1
+PUT /v1/users/1
 
 {
   firstName: 'Connor',
@@ -186,7 +186,7 @@ Request:
 
 ```
 HTTP 1.1
-DELETE /users/1
+DELETE /v1/users/1
 ```
 
 Response:
