@@ -61,17 +61,20 @@ function validateUser(req, res, next) {
   return next();
 }
 
-function responseWhenUserIsNull(user, res, callback) {
-  if (!user) {
+function responseWhenReturningOneUser(user, res) {
+  if (user) {
     return res.status(200).json({
       ok: true,
-      result: {},
+      result: user,
     });
   }
-  return callback();
+  return res.status(200).json({
+    ok: true,
+    result: {},
+  });
 }
 
 module.exports = {
   validateUser,
-  responseWhenUserIsNull,
+  responseWhenReturningOneUser,
 };
