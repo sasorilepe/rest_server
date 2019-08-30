@@ -37,7 +37,7 @@ userRouter.delete('/:id', (req, res) => {
   if (user) {
     return res.status(204).json({});
   }
-  res.status(404).json({
+  return res.status(404).json({
     ok: false,
     error: 'User not found',
   });
