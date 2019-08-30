@@ -1,54 +1,53 @@
-/* jshint esversion: 6 */
-
 const users = [
   {
     id: 1,
-    firstName: "John",
-    lastName: "Doe",
-    age: 21
+    firstName: 'John',
+    lastName: 'Doe',
+    age: 21,
   },
   {
     id: 2,
-    firstName: "Jenny",
-    lastName: "Doe",
-    age: 21
-  }
+    firstName: 'Jenny',
+    lastName: 'Doe',
+    age: 21,
+  },
 ];
 
-const getAll = () => {
-  return users;
+const getIndexById = (id) => users.findIndex((user) => user.id === id);
+
+const getAll = () => users;
+
+const getOneById = (id) => {
+  const index = getIndexById(id);
+  if (index === -1) {
+    return null;
+  }
+  return users[index];
 };
 
-const getOneById = id => {
-  const usersFiltered = users.filter(user => user.id == id);
-  return usersFiltered.length > 0 ? usersFiltered[0] : null;
-};
-
-const createOne = user => {
-  user.id = users.length + 1;
-  users.push(user);
+const createOne = (user) => {
+  const newUser = { ...user, id: users.length + 1 };
+  users.push(newUser);
   return user;
 };
 
 const updateOneById = (id, userData) => {
-  for (const user of users) {
-    if (user.id == id) {
-      Object.assign(user, userData);
-      return user;
-    }
+  const user = getOneById(id);
+  if (user === null) {
+    return null;
   }
-  return null;
+  const index = getIndexById(id);
+  users[index] = { ...user, ...userData };
+  return users[index];
 };
 
-const deleteOneById = id => {
-  for (const index in users) {
-    const user = users[index];
-    if (user.id == id) {
-      users.splice(index, 1);
-      return user;
-    }
+const deleteOneById = (id) => {
+  const index = getIndexById(id);
+  if (index === -1) {
+    return null;
   }
-  return null;
+  users.splice(index, 1);
+  return true;
 };
 
 module.exports = {
@@ -56,5 +55,5 @@ module.exports = {
   getOneById,
   createOne,
   updateOneById,
-  deleteOneById
+  deleteOneById,
 };

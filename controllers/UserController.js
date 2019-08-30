@@ -1,33 +1,31 @@
-const userService = require("../services/UserService");
+const userService = require('../services/UserService');
 
-const getAll = () => {
-  return userService.getAll();
-};
+const getAll = () => userService.getAll();
 
-const getOne = req => {
+const getOne = (req) => {
   const { id } = req.params;
-  const user = userService.getOneById(id);
+  const user = userService.getOneById(Number(id));
   return user;
 };
 
-const createOne = req => {
+const createOne = (req) => {
   const { body: userData } = req;
   const user = userService.createOne(userData);
   return user;
 };
 
-const updateOne = req => {
+const updateOne = (req) => {
   const {
     body: userData,
-    params: { id }
+    params: { id },
   } = req;
-  const user = userService.updateOneById(id, userData);
+  const user = userService.updateOneById(Number(id), userData);
   return user;
 };
 
-const deleteOne = req => {
+const deleteOne = (req) => {
   const { id } = req.params;
-  const user = userService.deleteOneById(id);
+  const user = userService.deleteOneById(Number(id));
   return user;
 };
 
@@ -36,5 +34,5 @@ module.exports = {
   getOne,
   createOne,
   updateOne,
-  deleteOne
+  deleteOne,
 };
