@@ -28,7 +28,7 @@ const getOneById = (id) => {
 const createOne = (user) => {
   const newUser = { ...user, id: users.length + 1 };
   users.push(newUser);
-  return user;
+  return newUser;
 };
 
 const updateOneById = (id, userData) => {
